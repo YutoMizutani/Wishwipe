@@ -30,10 +30,11 @@ targets:
         UILaunchStoryboardName: LaunchScreen
     sources:
       - path: Wishwipe
+      - path: SourceryRuntime
     preBuildScripts:
       - name: "Sourcery Run Script"
         script: |
-            mint run Sourcery sourcery --config ${SRCROOT}/Sourcery
+            sh ${SRCROOT}/scripts/general/sourcery/generate-sourcery.sh
     dependencies:
       - carthage: Alamofire
       - carthage: Nuke

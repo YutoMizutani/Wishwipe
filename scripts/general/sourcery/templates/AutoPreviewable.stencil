@@ -1,0 +1,51 @@
+{% for type in types.classes %}
+{% if type|annotated:"AutoPreviewable" and type.isFinal %}
+// sourcery:file:AutoPreviewable/{{ type.name }}Previews
+// Referenced by https://github.com/AkkeyLab/AutoPreviewable/blob/5a4199d8e8013b6c13f422a0f86ed89ab922b2eb/Sourcery/templates/AutoPreviewable.stencil
+
+import UIKit
+#if canImport(SwiftUI) && DEBUG
+import SwiftUI
+
+@available(iOS 13, *)
+struct {{ type.name }}Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            {{ type.name }}()
+                {% if type.annotations.customHeight %}
+                .previewLayout(.fixed(width: 320, height: {{ type.annotations.customHeight }}))
+                {% endif %}
+                .previewDevice(PreviewDevice(rawValue: "iPhone SE"))
+            {{ type.name }}()
+                {% if type.annotations.customHeight %}
+                .previewLayout(.fixed(width: 375, height: {{ type.annotations.customHeight }}))
+                {% endif %}
+                .previewDevice(PreviewDevice(rawValue: "iPhone XS"))
+            {{ type.name }}()
+                {% if type.annotations.customHeight %}
+                .previewLayout(.fixed(width: 414, height: {{ type.annotations.customHeight }}))
+                {% endif %}
+                .previewDevice(PreviewDevice(rawValue: "iPhone XS Max"))
+        }
+    }
+
+    static var platform: PreviewPlatform? = .iOS
+}
+
+@available(iOS 13, *)
+extension {{ type.name }}: UIViewRepresentable {
+    {{ type.accessLevel }} typealias UIViewType = {{ type.name }}
+
+    {{ type.accessLevel }} func makeUIView(context: Context) -> {{ type.name }} {
+        Bundle(for: type(of: self)).path(forResource: "{{ type.name }}", ofType: "nib") != nil
+            ? UINib(nibName: "{{ type.name }}", bundle: Bundle(for: type(of: self)))
+                .instantiate(withOwner: nil, options: nil)[0] as! {{ type.name }}
+            : .init()
+    }
+
+    {{ type.accessLevel }} func updateUIView(_ uiView: {{ type.name }}, context: Context) {}
+}
+#endif
+// sourcery:end
+{% endif %}
+{% endfor %}

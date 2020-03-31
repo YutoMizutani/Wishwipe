@@ -1,0 +1,7 @@
+#!/bin/sh
+
+BUNDLER_KEY="BUNDLED WITH"
+BUNDLER_KEY_REGEX="BUNDLED\sWITH"
+BUNDLER_VERSION=`grep -A 1 -E $BUNDLER_KEY_REGEX $(dirname $0)/../../../Gemfile.lock | sed -e "s/$BUNDLER_KEY//"`
+
+echo $BUNDLER_VERSION

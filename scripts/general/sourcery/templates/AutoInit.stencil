@@ -1,0 +1,14 @@
+{% for type in types.all where type.kind == "struct" or type.kind == "class" %}
+{% if type|annotated:"AutoInit" %}
+{% set spacing %}{% if type.parentName %}    {% endif %}{% endset %}
+{% map type.storedVariables into parameters using var %}{{ var.name }}: {{ var.typeName }}{% if var.defaultValue != nil %} = {{ var.defaultValue }}{% else %}{% if var.defaultValue == nil and var.isOptional %} = nil{% endif %}{% endif %}{% endmap %}
+// sourcery:inline:auto:{{ type.name }}.AutoInit
+{{ spacing }}    // swiftlint:disable:next all
+{{ spacing }}    {{ type.accessLevel }} init({{ parameters|join:", " }}) {
+{{ spacing }}        {% for variable in type.storedVariables %}
+{{ spacing }}        self.{{ variable.name }} = {{ variable.name }}
+{{ spacing }}        {% endfor %}
+{{ spacing }}    }
+// sourcery:end
+{% endif %}
+{% endfor %}

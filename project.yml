@@ -1,0 +1,143 @@
+name: Wishwipe
+options:
+  deploymentTarget:
+    iOS: 13.0
+  developmentLanguage: ja
+  carthageExecutablePath: mint run Carthage carthage
+settings:
+  SWIFT_VERSION: 5.2
+settingGroups:
+  automatic_signing:
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: XA5K4R7NDM
+targets:
+  Wishwipe:
+    type: application
+    platform: iOS
+    settings:
+      ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: ${inherited}
+      groups: [automatic_signing]
+      base:
+        IPHONEOS_DEPLOYMENT_TARGET: 13.0
+        PRODUCT_BUNDLE_IDENTIFIER: com.ym.Wishwipe
+        TARGETED_DEVICE_FAMILY: 1
+    attributes:
+      ProvisioningStyle: Automatic
+    info:
+      path: Wishwipe/Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+    sources:
+      - path: Wishwipe
+    preBuildScripts:
+      - name: "Sourcery Run Script"
+        script: |
+            mint run Sourcery sourcery --config ${SRCROOT}/Sourcery
+    dependencies:
+      - carthage: Alamofire
+      - carthage: Nuke
+      - carthage: RxCocoa
+      - carthage: RxGesture
+      - carthage: RxRelay
+      - carthage: RxSwift
+  WishwipeTests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: XA5K4R7NDM
+        PRODUCT_BUNDLE_IDENTIFIER: com.ym.WishwipeTests
+    info:
+      path: WishwipeTests/Info.plist
+    sources: WishwipeTests
+    dependencies:
+      - carthage: RxBlocking
+      - carthage: RxCocoa
+      - carthage: RxRelay
+      - carthage: RxSwift
+      - carthage: RxTest
+      - target: Wishwipe
+  WishwipeUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: XA5K4R7NDM
+        PRODUCT_BUNDLE_IDENTIFIER: com.ym.WishwipeUITests
+    info:
+      path: WishwipeUITests/Info.plist
+    sources: WishwipeUITests
+    dependencies:
+      - target: Wishwipe
+schemes:
+  Wishwipe:
+    build:
+      targets:
+        Wishwipe: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - name: WishwipeTests
+          parallelizable: true
+          randomExecutionOrder: true
+        - name: WishwipeUITests
+          parallelizable: true
+          randomExecutionOrder: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+      customArchiveName: Wishwipe
+      revealArchiveInOrganizer: true
+  WishwipeTests:
+    build:
+      targets:
+        WishwipeTests: [test]
+    run:
+      config: Debug
+      environmentVariables:
+        SKIP_ANIMATIONS:
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - name: WishwipeTests
+          parallelizable: true
+          randomExecutionOrder: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+      customArchiveName: WishwipeTests
+      revealArchiveInOrganizer: true
+  WishwipeUITests:
+    build:
+      targets:
+        WishwipeUITests: [run, test]
+    run:
+      config: Debug
+      environmentVariables:
+        SKIP_ANIMATIONS:
+    test:
+      config: Debug
+      targets:
+        - name: WishwipeUITests
+          parallelizable: true
+          randomExecutionOrder: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+      customArchiveName: Wishwipe
+      revealArchiveInOrganizer: true
